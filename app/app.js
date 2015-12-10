@@ -4,6 +4,7 @@
 var VideoFeedApp = angular.module('VideoFeedApp', []);
 
 VideoFeedApp.controller('VideoAppCtrl', ['$scope', function($scope) {
+    var maxVideos = 4;
     var videos = [{
         id: 1,
         name: 'video 1',
@@ -23,14 +24,24 @@ VideoFeedApp.controller('VideoAppCtrl', ['$scope', function($scope) {
         description: 'description 3',
         publishDate: '2015/12/09',
         img: 'url'
+    }, {
+        id: 4,
+        name: 'video 4',
+        description: 'description 4',
+        publishDate: '2015/12/08',
+        img: 'url'
+    }, {
+        id: 5,
+        name: 'video 5',
+        description: 'description 5',
+        publishDate: '2015/12/07',
+        img: 'url'
     }];
 
-    $scope.videos = videos;
+    $scope.videos = videos.slice(0, maxVideos);
 
     $scope.feedUrl = '';
 
     $scope.selectedVideo = videos[0];
 
 }]);
-
-

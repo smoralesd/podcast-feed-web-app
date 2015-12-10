@@ -20,24 +20,41 @@
 <body>
     <div class='container-fluid' ng-controller='VideoAppCtrl'>
 
+        <p></p>
         <div class='row'>
             <div class='col-lg-12'>
-                <h1>
-                    {{selectedVideo.name}}
-                </h1>
+
+                <div class='panel panel-default'>
+                    <div class='panel-body'>
+                        <h1>
+                            {{selectedVideo.name}}
+                        </h1>
+                    </div>
+                </div>
+
+                <div class='panel panel-default'>
+                    <div class='panel-body'>
+                        <p>
+                            {{selectedVideo.description}}
+                        </p>
+                    </div>
+                </div>
+
             </div>
 
-            <div class='col-lg-12'>
-                <p>
-                    {{selectedVideo.description}}
-                </p>
-            </div>
         </div>
 
         <div class='row'>
 
             <div class='col-lg-2'>
                 <div class='list-group'>
+
+                    <a align='center' href='#' class='list-group-item'>
+                        <button type="button" class="btn btn-default" aria-label="previous">
+                            <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+                        </button>
+                    </a>
+
                     <a href='#' ng-repeat='video in videos' class='list-group-item {{video.active}}'>
                         <h4 class='list-group-item-heading'>
                             {{video.name}}
@@ -46,10 +63,22 @@
                             {{video.publishDate}}
                         </p>
                     </a>
+
+                    <a align='center' href='#' class='list-group-item'>
+                        <button type="button" class="btn btn-default" aria-label="previous">
+                            <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+                        </button>
+                    </a>
+
                 </div>
             </div>
 
             <div class='col-lg-10'>
+                <div class='panel panel-default'>
+                    <div class='panel-body'>
+                        put the video player here
+                    </div>
+                </div>
             </div>
 
         </div>

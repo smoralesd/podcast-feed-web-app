@@ -4,7 +4,9 @@
 var VideoFeedApp = angular.module('VideoFeedApp', []);
 
 VideoFeedApp.controller('VideoAppCtrl', ['$scope', function($scope) {
-    var maxVideos = 4;
+
+    var MAX_VIDEOS = 4;
+
     var videos = [{
         id: 1,
         name: 'video 1',
@@ -38,10 +40,73 @@ VideoFeedApp.controller('VideoAppCtrl', ['$scope', function($scope) {
         img: 'url'
     }];
 
-    $scope.videos = videos.slice(0, maxVideos);
+    $scope.videos = videos.slice(0, MAX_VIDEOS);
 
-    $scope.feedUrl = '';
+    var selectedIndex = 0;
+    $scope.selectedVideo = videos[selectedIndex];
 
-    $scope.selectedVideo = videos[0];
+    $scope.handleKey = function(event) {
+        switch(event.keyCode) {
+            case KEY_VALUES.LOWER_K:
+            case KEY_VALUES.UP:
+                handleUp();
+                break;
+            case KEY_VALUES.LOWER_J:
+            case KEY_VALUES.DOWN:
+                handleDown();
+                break;
+            case KEY_VALUES.ENTER:
+                console.log('handling enter');
+                break;
+        }
+    }
 
+    var handleDown = function() {
+        var previousIndex = selectedIndex++;
+
+        if (selectedIndex >= videos.length) {
+            selectedIndex = videos.length - 1;
+        }
+
+        $scope.selectedVideo.active = null;
+        $scope.selectedVideo = videos[selectedIndex];
+        $scope.selectedVideo.active = 'active';
+
+        updateVideoList(previousIndex, selectedIndex);
+    }
+
+    var handleUp = function() {
+        var previousIndex = selectedIndex--;
+
+        if (selectedIndex <= 0) {
+            selectedIndex = 0;
+        }
+
+        $scope.selectedVideo.active = null;
+        $scope.selectedVideo = videos[selectedIndex];
+        $scope.selectedVideo.active = 'active';
+
+        updateVideoList(previousIndex, selectedIndex);
+    }
+
+    var updateVideoList = function(previous, index) {
+        var interval = Math.floor(index / MAX_VIDEOS);
+
+        if (previous != index) {
+            var initialPosition = interval * MAX_VIDEOS;
+            var finalPosition = initialPosition + MAX_VIDEOS;
+            $scope.videos = videos.slice(initialPosition, finalPosition);
+        }
+    }
 }]);
+
+var KEY_VALUES = {
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40,
+    LOWER_J: 74,
+    LOWER_K: 75,
+    ENTER: 13
+};
+

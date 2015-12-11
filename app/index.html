@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="VideoFeedApp">
+<html lang="en" ng-app="VideoFeedApp" ng-controller='VideoAppCtrl' ng-keyup='handleKey($event)'>
 
 <head>
     <meta charset="utf-8">
@@ -18,7 +18,7 @@
 </head>
 
 <body>
-    <div class='container-fluid' ng-controller='VideoAppCtrl'>
+    <div class='container-fluid'>
 
         <p></p>
         <div class='row'>

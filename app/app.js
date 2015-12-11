@@ -3,9 +3,13 @@
 // Declare app level module which depends on views, and components
 var VideoFeedApp = angular.module('VideoFeedApp', []);
 
-VideoFeedApp.controller('VideoAppCtrl', ['$scope', function($scope) {
+VideoFeedApp.controller('VideoAppCtrl', ['$scope', 'FeedService', function($scope, FeedService) {
 
     var MAX_VIDEOS = 4;
+
+    FeedService.getVideos().then(function(_videos) {
+        console.log('_videos:', _videos);
+    });
 
     var videos = [{
         id: 1,
@@ -46,7 +50,7 @@ VideoFeedApp.controller('VideoAppCtrl', ['$scope', function($scope) {
     $scope.selectedVideo = videos[selectedIndex];
 
     $scope.handleKey = function(event) {
-        switch(event.keyCode) {
+        switch (event.keyCode) {
             case KEY_VALUES.LOWER_K:
             case KEY_VALUES.UP:
                 handleUp();
@@ -100,6 +104,35 @@ VideoFeedApp.controller('VideoAppCtrl', ['$scope', function($scope) {
     }
 }]);
 
+VideoFeedApp.factory('FeedService', ['$http', function($http) {
+    var FeedService = function() {
+        this.feeds = {
+            'all': 'http://edition.cnn.com/services/podcasting/all/rss.xml',
+            'bell ringers club': 'http://rss.cnn.com/services/podcasting/brc/rss',
+            'debates': 'http://rss.cnn.com/services/podcasting/CNN-debates/rss.xml'
+        };
+
+        this.current = 'debates';
+    }
+
+    FeedService.prototype.getCurrentUrl = function() {
+        return this.feeds[this.current];
+    };
+
+    FeedService.prototype._parseFeed = function() {
+        return $http.jsonp('//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=50&callback=JSON_CALLBACK&q=' + encodeURIComponent(this.getCurrentUrl()));
+    };
+
+    FeedService.prototype.getVideos = function() {
+        return this._parseFeed().then(function(results) {
+            var entries = results.data.responseData.feed.entries;
+            return Promise.resolve(entries);
+        });
+    }
+
+    return new FeedService();
+}]);
+
 var KEY_VALUES = {
     LEFT: 37,
     UP: 38,
@@ -109,4 +142,3 @@ var KEY_VALUES = {
     LOWER_K: 75,
     ENTER: 13
 };
-

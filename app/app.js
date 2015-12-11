@@ -6,48 +6,16 @@ var VideoFeedApp = angular.module('VideoFeedApp', []);
 VideoFeedApp.controller('VideoAppCtrl', ['$scope', 'FeedService', function($scope, FeedService) {
 
     var MAX_VIDEOS = 4;
+    var videos = [];
+    var selectedIndex = 0;
 
     FeedService.getVideos().then(function(_videos) {
-        console.log('_videos:', _videos);
+        videos = _videos;
+        $scope.videos = videos.slice(0, MAX_VIDEOS);
+
+        $scope.selectedVideo = videos[selectedIndex];
+        updateVideoList(1, 0);
     });
-
-    var videos = [{
-        id: 1,
-        name: 'video 1',
-        description: 'description 1',
-        publishDate: '2015/12/11',
-        img: 'url',
-        active: 'active'
-    }, {
-        id: 2,
-        name: 'video 2',
-        description: 'description 2',
-        publishDate: '2015/12/10',
-        img: 'url'
-    }, {
-        id: 3,
-        name: 'video 3',
-        description: 'description 3',
-        publishDate: '2015/12/09',
-        img: 'url'
-    }, {
-        id: 4,
-        name: 'video 4',
-        description: 'description 4',
-        publishDate: '2015/12/08',
-        img: 'url'
-    }, {
-        id: 5,
-        name: 'video 5',
-        description: 'description 5',
-        publishDate: '2015/12/07',
-        img: 'url'
-    }];
-
-    $scope.videos = videos.slice(0, MAX_VIDEOS);
-
-    var selectedIndex = 0;
-    $scope.selectedVideo = videos[selectedIndex];
 
     $scope.handleKey = function(event) {
         switch (event.keyCode) {
@@ -72,10 +40,6 @@ VideoFeedApp.controller('VideoAppCtrl', ['$scope', 'FeedService', function($scop
             selectedIndex = videos.length - 1;
         }
 
-        $scope.selectedVideo.active = null;
-        $scope.selectedVideo = videos[selectedIndex];
-        $scope.selectedVideo.active = 'active';
-
         updateVideoList(previousIndex, selectedIndex);
     }
 
@@ -86,17 +50,16 @@ VideoFeedApp.controller('VideoAppCtrl', ['$scope', 'FeedService', function($scop
             selectedIndex = 0;
         }
 
-        $scope.selectedVideo.active = null;
-        $scope.selectedVideo = videos[selectedIndex];
-        $scope.selectedVideo.active = 'active';
-
         updateVideoList(previousIndex, selectedIndex);
     }
 
     var updateVideoList = function(previous, index) {
-        var interval = Math.floor(index / MAX_VIDEOS);
+        $scope.selectedVideo.active = null;
+        $scope.selectedVideo = videos[index];
+        $scope.selectedVideo.active = 'active';
 
         if (previous != index) {
+            var interval = Math.floor(index / MAX_VIDEOS);
             var initialPosition = interval * MAX_VIDEOS;
             var finalPosition = initialPosition + MAX_VIDEOS;
             $scope.videos = videos.slice(initialPosition, finalPosition);
@@ -104,7 +67,7 @@ VideoFeedApp.controller('VideoAppCtrl', ['$scope', 'FeedService', function($scop
     }
 }]);
 
-VideoFeedApp.factory('FeedService', ['$http', function($http) {
+VideoFeedApp.factory('FeedService', ['$http', '$sce', function($http, $sce) {
     var FeedService = function() {
         this.feeds = {
             'all': 'http://edition.cnn.com/services/podcasting/all/rss.xml',
@@ -126,12 +89,46 @@ VideoFeedApp.factory('FeedService', ['$http', function($http) {
     FeedService.prototype.getVideos = function() {
         return this._parseFeed().then(function(results) {
             var entries = results.data.responseData.feed.entries;
-            return Promise.resolve(entries);
+            console.log('entries:', entries);
+
+            var videos = entries.map(function(elem) {
+                var newVideo = new VideoModel();
+                newVideo.parse(elem, $sce);
+                return newVideo;
+            });
+
+            return Promise.resolve(videos);
         });
     }
 
     return new FeedService();
 }]);
+
+var VideoModel = function() {
+    this.name = 'no name';
+    this.description = 'no description';
+    this.publishedDate = new Date();
+    this.videoUrl = null;
+};
+
+VideoModel.prototype.parse = function(data, sanitizer) {
+    if (data.hasOwnProperty('title')) {
+        this.name = data.title;
+    }
+
+    if (data.hasOwnProperty('publishedDate')) {
+        this.publishedDate = new Date(data.publishedDate);
+    }
+
+    if (data.hasOwnProperty('contentSnippet')) {
+        // this.description = data.contentSnippet;
+        this.description = sanitizer.trustAsHtml(data.contentSnippet);
+    }
+
+    if (data.hasOwnProperty('link')) {
+        this.videoUrl = data.link;
+    }
+}
 
 var KEY_VALUES = {
     LEFT: 37,

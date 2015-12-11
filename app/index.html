@@ -76,7 +76,11 @@
             <div class='col-lg-10'>
                 <div class='panel panel-default'>
                     <div class='panel-body'>
-                        put the video player here
+                        <div align='center' class='embed-responsive embed-responsive-16by9'>
+                            <video controls>
+                                <source ng-src="{{selectedVideo.videoUrl | trusted}}" type="video/mp4"/>
+                            </video>
+                        </div>
                     </div>
                 </div>
             </div>

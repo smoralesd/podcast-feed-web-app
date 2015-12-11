@@ -3,6 +3,12 @@
 // Declare app level module which depends on views, and components
 var VideoFeedApp = angular.module('VideoFeedApp', []);
 
+VideoFeedApp.filter('trusted', ['$sce', function($sce) {
+    return function(url) {
+        return $sce.trustAsResourceUrl(url);
+    }
+}])
+
 VideoFeedApp.controller('VideoAppCtrl', ['$scope', 'FeedService', function($scope, FeedService) {
 
     var MAX_VIDEOS = 4;
@@ -14,6 +20,7 @@ VideoFeedApp.controller('VideoAppCtrl', ['$scope', 'FeedService', function($scop
         $scope.videos = videos.slice(0, MAX_VIDEOS);
 
         $scope.selectedVideo = videos[selectedIndex];
+
         updateVideoList(1, 0);
     });
 

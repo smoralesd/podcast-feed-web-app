@@ -32,7 +32,7 @@ http://localhost:8000/app/
 
 ## Apache
 
-Setup Apache, then copy the files on your web directory (~/Library/WebServer/Directories on Mac OS X for example)
+Setup Apache, then copy the files on your web directory (~/Library/WebServer/Documents on Mac OS X for example)
 Make sure Apache is running
 
 ```

@@ -1,9 +1,9 @@
 {
-  "name": "video-feed-web-app",
+  "name": "podcast-feed-web-app",
   "private": true,
   "version": "0.0.1",
-  "description": "An rss video feed player",
-  "repository": "https://github.com/smoralesd/video-feed-web-app",
+  "description": "An rss podcast feed player",
+  "repository": "https://github.com/smoralesd/podcast-feed-web-app",
   "license": "MIT",
   "devDependencies": {
     "karma": "^0.12.16",

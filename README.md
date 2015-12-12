@@ -29,3 +29,15 @@ To see the web app, open your browser (Chrome will do) and go to
 ```
 http://localhost:8000/app/
 ```
+
+## Apache
+
+Setup Apache, then copy the files on your web directory (~/Library/WebServer/Directories on Mac OS X for example)
+Make sure Apache is running
+
+```
+sudo apachectl start
+```
+
+Access the app accordingly to your Apache setup and the path you setup for this web app.
+

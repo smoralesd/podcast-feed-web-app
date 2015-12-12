@@ -133,7 +133,8 @@ PodcastModel.prototype.parse = function(data, sanitizer) {
     }
 
     if (data.hasOwnProperty('publishedDate')) {
-        this.publishedDate = new Date(data.publishedDate);
+        var _date = new Date(data.publishedDate);
+        this.publishedDate = _date.getFullYear() + '/' + _date.getMonth() + '/' + _date.getDay();
     }
 
     if (data.hasOwnProperty('contentSnippet')) {

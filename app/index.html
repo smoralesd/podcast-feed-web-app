@@ -56,11 +56,11 @@
                     </a>
 
                     <a href='#' ng-repeat='podcast in podcasts' class='list-group-item {{podcast.active}}'>
-                        <h4 class='list-group-item-heading'>
+                        <h5 class='list-group-item-heading'>
                             {{podcast.name}}
-                        </h4>
+                        </h5>
                         <p class='list-group-item-text'>
-                            {{podcast.publishDate}}
+                            {{podcast.publishedDate}}
                         </p>
                     </a>
 
@@ -92,6 +92,7 @@
                         {{selectedPodcast.description}}
                     </div>
                 </div>
+
             </div>
 
         </div>

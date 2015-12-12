@@ -8,18 +8,28 @@ PodcastFeedApp.filter('trusted', ['$sce', function($sce) {
     }
 }])
 
-PodcastFeedApp.controller('PodcastAppCtrl', ['$scope', 'FeedService', function($scope, FeedService) {
+PodcastFeedApp.controller('PodcastAppCtrl', ['$scope', '$sce', 'FeedService', function($scope, $sce, FeedService) {
 
     var MAX_PODCASTS = 4;
     var podcasts = [];
     var selectedIndex = 0;
 
-    FeedService.getPodcasts().then(function(_podcasts) {
-        podcasts = _podcasts;
+    FeedService.parseFeed().then(function(results) {
+        var data = results.data.responseData;
+
+        $scope.feed = {
+            title: data.feed.title,
+            description: data.feed.description
+        };
+        console.log('data', data);
+        podcasts = data.feed.entries.map(function(elem) {
+            var newPodcast = new PodcastModel();
+            newPodcast.parse(elem, $sce);
+            return newPodcast;
+        });
+
         $scope.podcasts = podcasts.slice(0, MAX_PODCASTS);
-
         $scope.selectedPodcast = podcasts[selectedIndex];
-
         updatePodcastsList(1, 0);
     });
 
@@ -90,8 +100,7 @@ PodcastFeedApp.controller('PodcastAppCtrl', ['$scope', 'FeedService', function($
 PodcastFeedApp.factory('FeedService', ['$http', '$sce', function($http, $sce) {
     var FeedService = function() {
         this.feeds = {
-            'all': 'http://edition.cnn.com/services/podcasting/all/rss.xml',
-            'bell ringers club': 'http://rss.cnn.com/services/podcasting/brc/rss',
+            'updates': 'http://edition.cnn.com/services/podcasting/all/rss.xml',
             'debates': 'http://rss.cnn.com/services/podcasting/CNN-debates/rss.xml'
         };
 
@@ -102,25 +111,10 @@ PodcastFeedApp.factory('FeedService', ['$http', '$sce', function($http, $sce) {
         return this.feeds[this.current];
     };
 
-    FeedService.prototype._parseFeed = function() {
+    FeedService.prototype.parseFeed = function() {
         //using google api service to parse the rss feed
         return $http.jsonp('//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=50&callback=JSON_CALLBACK&q=' + encodeURIComponent(this.getCurrentUrl()));
     };
-
-    FeedService.prototype.getPodcasts = function() {
-        return this._parseFeed().then(function(results) {
-            var entries = results.data.responseData.feed.entries;
-            console.log('entries:', entries);
-
-            var podcasts = entries.map(function(elem) {
-                var newPodcast = new PodcastModel();
-                newPodcast.parse(elem, $sce);
-                return newPodcast;
-            });
-
-            return Promise.resolve(podcasts);
-        });
-    }
 
     return new FeedService();
 }]);

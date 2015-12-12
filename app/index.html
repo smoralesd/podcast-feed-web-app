@@ -27,7 +27,7 @@
                 <div class='panel panel-default'>
                     <div class='panel-body'>
                         <h1>
-                            {{selectedPodcast.name}}
+                            {{feed.title}}
                         </h1>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                 <div class='panel panel-default'>
                     <div class='panel-body'>
                         <p>
-                            {{selectedPodcast.description}}
+                            {{feed.description}}
                         </p>
                     </div>
                 </div>
@@ -74,6 +74,7 @@
             </div>
 
             <div class='col-lg-10'>
+
                 <div class='panel panel-default'>
                     <div class='panel-body'>
                         <div align='center' class='embed-responsive embed-responsive-16by9'>
@@ -83,6 +84,12 @@
                             </audio>
 
                         </div>
+                    </div>
+                </div>
+
+                <div class='panel panel-default'>
+                    <div class='panel-body'>
+                        {{selectedPodcast.description}}
                     </div>
                 </div>
             </div>

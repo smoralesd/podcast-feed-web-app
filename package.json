@@ -1,7 +1,7 @@
 {
   "name": "podcast-feed-web-app",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "An rss podcast feed player",
   "repository": "https://github.com/smoralesd/podcast-feed-web-app",
   "license": "MIT",

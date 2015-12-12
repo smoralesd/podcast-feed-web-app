@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="VideoFeedApp" ng-controller='VideoAppCtrl' ng-keyup='handleKey($event)'>
+<html lang="en" ng-app="PodcastFeedApp" ng-controller='PodcastAppCtrl' ng-keyup='handleKey($event)'>
 
 <head>
     <meta charset="utf-8">
-    <title>Video Feed Web App</title>
+    <title>Podcast Feed Web App</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
@@ -27,7 +27,7 @@
                 <div class='panel panel-default'>
                     <div class='panel-body'>
                         <h1>
-                            {{selectedVideo.name}}
+                            {{selectedPodcast.name}}
                         </h1>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                 <div class='panel panel-default'>
                     <div class='panel-body'>
                         <p>
-                            {{selectedVideo.description}}
+                            {{selectedPodcast.description}}
                         </p>
                     </div>
                 </div>
@@ -55,12 +55,12 @@
                         </button>
                     </a>
 
-                    <a href='#' ng-repeat='video in videos' class='list-group-item {{video.active}}'>
+                    <a href='#' ng-repeat='podcast in podcasts' class='list-group-item {{podcast.active}}'>
                         <h4 class='list-group-item-heading'>
-                            {{video.name}}
+                            {{podcast.name}}
                         </h4>
                         <p class='list-group-item-text'>
-                            {{video.publishDate}}
+                            {{podcast.publishDate}}
                         </p>
                     </a>
 
@@ -77,9 +77,11 @@
                 <div class='panel panel-default'>
                     <div class='panel-body'>
                         <div align='center' class='embed-responsive embed-responsive-16by9'>
-                            <video controls>
-                                <source ng-src="{{selectedVideo.videoUrl | trusted}}" type="video/mp4"/>
-                            </video>
+
+                            <audio id='podcastPlayer' preload='metadata' controls ng-src='{{selectedPodcast.url | trusted}}' >
+                                Your browser doesn't support the HTML audio tag.
+                            </audio>
+
                         </div>
                     </div>
                 </div>
